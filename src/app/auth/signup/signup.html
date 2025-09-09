@@ -1,1 +1,179 @@
-<p>signup works!</p>
+<div class="signup-container">
+  <div class="signup-card">
+    <!-- Header -->
+    <div class="signup-header">
+      <h2 class="signup-title">Join Shaghalny</h2>
+      <p class="signup-subtitle">Find your dream job today</p>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="signup-form">
+      
+      <!-- Full Name -->
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input
+            type="text"
+            formControlName="fullName"
+            placeholder="Full Name"
+            class="form-input"
+            [class.error]="fullName?.invalid && fullName?.touched"
+            [class.success]="fullName?.valid && fullName?.touched"
+          />
+        </div>
+        <div class="error-message" *ngIf="fullName?.invalid && fullName?.touched">
+          <span *ngIf="fullName?.errors?.['required']">Full name is required</span>
+          <span *ngIf="fullName?.errors?.['minlength']">Name must be at least 2 characters</span>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input
+            type="email"
+            formControlName="email"
+            placeholder="Email Address"
+            class="form-input"
+            [class.error]="email?.invalid && email?.touched"
+            [class.success]="email?.valid && email?.touched"
+          />
+        </div>
+        <div class="error-message" *ngIf="email?.invalid && email?.touched">
+          <span *ngIf="email?.errors?.['required']">Email is required</span>
+          <span *ngIf="email?.errors?.['email']">Please enter a valid email</span>
+        </div>
+      </div>
+
+      <!-- Phone -->
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input
+            type="tel"
+            formControlName="phone"
+            placeholder="Phone Number"
+            class="form-input"
+            [class.error]="phone?.invalid && phone?.touched"
+            [class.success]="phone?.valid && phone?.touched"
+          />
+        </div>
+        <div class="error-message" *ngIf="phone?.invalid && phone?.touched">
+          <span *ngIf="phone?.errors?.['required']">Phone number is required</span>
+          <span *ngIf="phone?.errors?.['pattern']">Please enter a valid phone number</span>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Password"
+            class="form-input"
+            [class.error]="password?.invalid && password?.touched"
+            [class.success]="password?.valid && password?.touched"
+          />
+          <button 
+            type="button"
+            class="password-toggle"
+            (click)="togglePassword()"
+          >
+            {{showPassword ? '👁️' : '👁️‍🗨️'}}
+          </button>
+        </div>
+        <!-- Password Strength -->
+        <div class="password-strength" *ngIf="password?.value">
+          <div class="strength-bar">
+            <div class="strength-fill" [style.width.%]="passwordStrength" [class]="passwordStrengthClass"></div>
+          </div>
+          <span class="strength-text" [class]="passwordStrengthClass">{{ passwordStrengthText }}</span>
+        </div>
+        <div class="error-message" *ngIf="password?.invalid && password?.touched">
+          <span *ngIf="password?.errors?.['required']">Password is required</span>
+          <span *ngIf="password?.errors?.['minlength']">Password must be at least 8 characters</span>
+          <span *ngIf="password?.errors?.['pattern']">Password must contain uppercase, lowercase, number and special character</span>
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            formControlName="confirmPassword"
+            placeholder="Confirm Password"
+            class="form-input"
+            [class.error]="confirmPassword?.invalid && confirmPassword?.touched || signupForm.errors?.['passwordMismatch']"
+            [class.success]="confirmPassword?.valid && confirmPassword?.touched && !signupForm.errors?.['passwordMismatch']"
+          />
+          <button 
+            type="button"
+            class="password-toggle"
+            (click)="toggleConfirmPassword()"
+          >
+            {{showConfirmPassword ? '👁️' : '👁️‍🗨️'}}
+          </button>
+        </div>
+        <div class="error-message" *ngIf="(confirmPassword?.invalid && confirmPassword?.touched) || (signupForm.errors?.['passwordMismatch'] && confirmPassword?.touched)">
+          <span *ngIf="confirmPassword?.errors?.['required']">Please confirm your password</span>
+          <span *ngIf="signupForm.errors?.['passwordMismatch']">Passwords do not match</span>
+        </div>
+      </div>
+
+      <!-- User Type -->
+      <div class="form-group">
+        <label class="form-label">I am a:</label>
+        <div class="user-type-options">
+          <div class="user-type-card" 
+               [class.selected]="userType?.value === 'candidate'"
+               (click)="selectUserType('candidate')">
+            <div class="card-icon">👤</div>
+            <span>Job Seeker</span>
+          </div>
+          <div class="user-type-card" 
+               [class.selected]="userType?.value === 'recruiter'"
+               (click)="selectUserType('recruiter')">
+            <div class="card-icon">🏢</div>
+            <span>Recruiter</span>
+          </div>
+        </div>
+        <div class="error-message" *ngIf="userType?.invalid && userType?.touched">
+          <span *ngIf="userType?.errors?.['required']">Please select your user type</span>
+        </div>
+      </div>
+
+      <!-- Terms -->
+      <div class="form-group">
+        <label class="checkbox-wrapper">
+          <input type="checkbox" formControlName="acceptTerms">
+          <span class="checkbox-custom"></span>
+          <span class="checkbox-text">
+            I agree to the <a href="#" class="link">Terms of Service</a> and <a href="#" class="link">Privacy Policy</a>
+          </span>
+        </label>
+        <div class="error-message" *ngIf="acceptTerms?.invalid && acceptTerms?.touched">
+          <span *ngIf="acceptTerms?.errors?.['required']">You must accept the terms and conditions</span>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button 
+        type="submit" 
+        class="submit-btn"
+        [class.loading]="isLoading"
+        [disabled]="signupForm.invalid || isLoading"
+      >
+        <span *ngIf="!isLoading">Create Account</span>
+        <span *ngIf="isLoading">Creating Account... ⏳</span>
+      </button>
+
+    </form>
+
+    <!-- Login Link -->
+    <div class="login-link">
+      Already have an account? 
+      <a routerLink="/login" class="link">Sign In</a>
+    </div>
+  </div>
+</div>

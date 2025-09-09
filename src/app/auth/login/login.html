@@ -1,1 +1,137 @@
-<p>login works!</p>
+<div class="login-container">
+  <div class="login-card">
+    <!-- Header -->
+    <div class="login-header">
+      <h2 class="login-title">Welcome Back!</h2>
+      <p class="login-subtitle">Sign in to your Shaghalny account</p>
+    </div>
+
+    <!-- Success Message from Signup -->
+    <div class="success-alert" *ngIf="successMessage">
+      <div class="alert-icon">✅</div>
+      <span>{{ successMessage }}</span>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <!-- Email -->
+      <div class="form-group">
+        <div class="input-wrapper">
+          <div class="input-icon">📧</div>
+          <input
+            type="email"
+            formControlName="email"
+            placeholder="Email Address"
+            class="form-input"
+            [class.error]="email?.invalid && email?.touched"
+            [class.success]="email?.valid && email?.touched"
+          />
+        </div>
+        <div class="error-message" *ngIf="email?.invalid && email?.touched">
+          <span *ngIf="email?.errors?.['required']">Email is required</span>
+          <span *ngIf="email?.errors?.['email']">Please enter a valid email</span>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <div class="input-wrapper">
+          <div class="input-icon">🔒</div>
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Password"
+            class="form-input"
+            [class.error]="password?.invalid && password?.touched"
+            [class.success]="password?.valid && password?.touched"
+          />
+          <button type="button" class="password-toggle" (click)="togglePassword()">
+            {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        <div class="error-message" *ngIf="password?.invalid && password?.touched">
+          <span *ngIf="password?.errors?.['required']">Password is required</span>
+          <span *ngIf="password?.errors?.['minlength']"
+            >Password must be at least 6 characters</span
+          >
+        </div>
+      </div>
+
+      <!-- Remember Me & Forgot Password -->
+      <div class="form-options">
+        <label class="checkbox-wrapper">
+          <input type="checkbox" formControlName="rememberMe" />
+          <span class="checkbox-custom"></span>
+          <span class="checkbox-text">Remember me</span>
+        </label>
+        <a href="#" class="forgot-link">Forgot Password?</a>
+      </div>
+
+      <!-- Login Error Message -->
+      <div class="login-error" *ngIf="loginError">
+        <div class="error-icon">❌</div>
+        <span>{{ loginError }}</span>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="submit-btn"
+        [class.loading]="isLoading"
+        [disabled]="loginForm.invalid || isLoading"
+      >
+        <span *ngIf="!isLoading">Sign In</span>
+        <span *ngIf="isLoading" class="loading-text">
+          <div class="spinner"></div>
+          Signing In...
+        </span>
+      </button>
+    </form>
+
+    <!-- Divider -->
+    <div class="divider">
+      <span>or continue with</span>
+    </div>
+
+    <!-- Social Login -->
+   <div class="social-buttons">
+  <button type="button" class="social-btn google-btn" (click)="loginWithGoogle()">
+    <span class="social-icon">
+      <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google Logo" width="20" height="20"/>
+    </span>
+    Google
+  </button>
+
+  <button type="button" class="social-btn facebook-btn" (click)="loginWithFacebook()">
+    <span class="social-icon">
+      <img src="https://www.svgrepo.com/show/452196/facebook-1.svg" alt="Facebook Logo" width="20" height="20"/>
+    </span>
+    Facebook
+  </button>
+</div>
+
+
+    <!-- Signup Link -->
+    <div class="signup-link">
+      Don't have an account?
+      <a routerLink="/signup" class="link">Create Account</a>
+    </div>
+
+    <!-- Demo Credentials -->
+    <div class="demo-section">
+      <p class="demo-title">Demo Credentials:</p>
+      <div class="demo-buttons">
+        <button type="button" class="demo-btn" (click)="fillDemoUser()">👤 Job Seeker</button>
+        <button type="button" class="demo-btn" (click)="fillDemoRecruiter()">🏢 Recruiter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Animation Elements -->
+  <div class="floating-elements">
+    <div class="float-element element-1">💼</div>
+    <div class="float-element element-2">🎯</div>
+    <div class="float-element element-3">⭐</div>
+    <div class="float-element element-4">🚀</div>
+  </div>
+</div>
